@@ -136,6 +136,19 @@ function App() {
     }
   };
 
+  // Helper function to recursively update a node in the tree
+  const updateTreeNode = (nodes, noteId, updatedData) => {
+    return nodes.map(node => {
+      if (node.id === noteId) {
+        return { ...node, ...updatedData };
+      }
+      if (node.children && node.children.length > 0) {
+        return { ...node, children: updateTreeNode(node.children, noteId, updatedData) };
+      }
+      return node;
+    });
+  };
+
   const handleSaveNote = async (title, content) => {
     if (!currentNoteId) return;
 
@@ -148,8 +161,11 @@ function App() {
       const updatedNote = res.data;
       setNotes(notes.map(n => n.id === currentNoteId ? updatedNote : n));
       setCurrentNote(updatedNote);
-      setStatus('Saved ✓');
       
+      // Update only the changed node in the tree
+      setNotesTree(updateTreeNode(notesTree, currentNoteId, { title: updatedNote.title }));
+      
+      setStatus('Saved ✓');
       setTimeout(() => setStatus(''), 3000);
     } catch (error) {
       console.error('Error saving note:', error);
@@ -180,7 +196,6 @@ function App() {
   return (
     <div className="app">
       <header className="app-header">
-        <h1>📝 YZC Notes</h1>
         <button 
           className="btn-settings" 
           onClick={() => setShowSettings(!showSettings)}
