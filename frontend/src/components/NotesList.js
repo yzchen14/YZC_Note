@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
 import './NotesList.css';
 
-function NotesList({ notes, allNotes, currentNoteId, onSelectNote, onCreateSubNote }) {
+function NotesList({ notes, allNotes, currentNoteId, onSelectNote, onCreateSubNote, onDeleteNote }) {
   const [expandedNodes, setExpandedNodes] = useState(new Set());
+  const [contextMenu, setContextMenu] = useState(null);
+  const [contextNoteId, setContextNoteId] = useState(null);
 
   const toggleNode = (nodeId) => {
     const newExpanded = new Set(expandedNodes);
@@ -13,6 +15,29 @@ function NotesList({ notes, allNotes, currentNoteId, onSelectNote, onCreateSubNo
     }
     setExpandedNodes(newExpanded);
   };
+
+  const handleContextMenu = (e, noteId) => {
+    e.preventDefault();
+    setContextNoteId(noteId);
+    setContextMenu({
+      x: e.clientX,
+      y: e.clientY
+    });
+  };
+
+  const handleContextMenuAction = (action, noteId) => {
+    if (action === 'delete') {
+      onDeleteNote(noteId);
+    }
+    setContextMenu(null);
+  };
+
+  // Close context menu when clicking elsewhere
+  React.useEffect(() => {
+    const handleClick = () => setContextMenu(null);
+    document.addEventListener('click', handleClick);
+    return () => document.removeEventListener('click', handleClick);
+  }, []);
 
   const renderTreeNode = (node, level = 0) => {
     const isExpanded = expandedNodes.has(node.id);
@@ -25,6 +50,7 @@ function NotesList({ notes, allNotes, currentNoteId, onSelectNote, onCreateSubNo
         <div 
           className={`note-item ${node.id === currentNoteId ? 'active' : ''}`}
           style={{ marginLeft: `${level * 16}px` }}
+          onContextMenu={(e) => handleContextMenu(e, node.id)}
         >
           <span 
             className={`note-item-toggle ${node.children?.length > 0 ? '' : 'disabled'}`}
@@ -62,13 +88,28 @@ function NotesList({ notes, allNotes, currentNoteId, onSelectNote, onCreateSubNo
   };
 
   return (
-    <div className="notes-list">
-      {notes.length === 0 ? (
-        <div className="empty-notes">No notes yet</div>
-      ) : (
-        notes.map(node => renderTreeNode(node))
+    <>
+      <div className="notes-list">
+        {notes.length === 0 ? (
+          <div className="empty-notes">No notes yet</div>
+        ) : (
+          notes.map(node => renderTreeNode(node))
+        )}
+      </div>
+      {contextMenu && (
+        <div 
+          className="context-menu"
+          style={{ top: `${contextMenu.y}px`, left: `${contextMenu.x}px` }}
+        >
+          <div 
+            className="context-menu-item"
+            onClick={() => handleContextMenuAction('delete', contextNoteId)}
+          >
+            🗑️ Delete
+          </div>
+        </div>
       )}
-    </div>
+    </>
   );
 }
 

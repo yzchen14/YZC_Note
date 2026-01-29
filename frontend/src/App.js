@@ -218,6 +218,7 @@ function App() {
             currentNoteId={currentNoteId}
             onSelectNote={handleSelectNote}
             onCreateSubNote={handleCreateSubNote}
+            onDeleteNote={handleDeleteNote}
           />
         </aside>
 
