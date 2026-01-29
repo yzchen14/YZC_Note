@@ -1,0 +1,60 @@
+.note-editor {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
+}
+
+.editor-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 15px 20px;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.note-title {
+  flex: 1;
+  font-size: 20px;
+  font-weight: 600;
+  border: none;
+  outline: none;
+  padding: 8px 0;
+  border-bottom: 2px solid transparent;
+  transition: border-color 0.3s;
+}
+
+.note-title:focus {
+  border-bottom-color: #667eea;
+}
+
+.btn-delete {
+  padding: 8px 16px;
+  background: #ff6b6b;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 13px;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.btn-delete:hover {
+  background: #ee5a52;
+}
+
+.note-content {
+  flex: 1;
+  padding: 20px;
+  border: none;
+  outline: none;
+  font-size: 14px;
+  line-height: 1.6;
+  resize: none;
+  font-family: 'Monaco', 'Courier New', monospace;
+  background: white;
+}
+
+.note-content:focus {
+  outline: none;
+}
