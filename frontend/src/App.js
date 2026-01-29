@@ -36,6 +36,7 @@ function App() {
       setLoading(true);
       const notesRes = await axios.get(`${API_BASE_URL}/notes/`);
       const treeRes = await axios.get(`${API_BASE_URL}/notes/tree`);
+      console.log(treeRes)
       
       setNotes(notesRes.data);
       setNotesTree(treeRes.data);
@@ -85,6 +86,28 @@ function App() {
     } catch (error) {
       console.error('Error creating note:', error);
       setStatus('Error creating note');
+    }
+  };
+
+  const handleCreateSubNote = async (parentNoteId) => {
+    try {
+      const res = await axios.post(`${API_BASE_URL}/notes/`, {
+        title: 'Untitled',
+        content: '',
+        parent_id: parentNoteId
+      });
+      
+      const newNote = res.data;
+      setNotes([...notes, newNote]);
+      setCurrentNoteId(newNote.id);
+      setStatus('Sub-note created');
+      
+      // Reload tree
+      const treeRes = await axios.get(`${API_BASE_URL}/notes/tree`);
+      setNotesTree(treeRes.data);
+    } catch (error) {
+      console.error('Error creating sub-note:', error);
+      setStatus('Error creating sub-note');
     }
   };
 
@@ -179,6 +202,7 @@ function App() {
             allNotes={notes}
             currentNoteId={currentNoteId}
             onSelectNote={handleSelectNote}
+            onCreateSubNote={handleCreateSubNote}
           />
         </aside>
 
@@ -188,6 +212,7 @@ function App() {
               note={currentNote}
               onSave={handleSaveNote}
               onDelete={() => handleDeleteNote(currentNoteId)}
+              onCreateSubNote={handleCreateSubNote}
             />
           ) : (
             <div className="no-note">

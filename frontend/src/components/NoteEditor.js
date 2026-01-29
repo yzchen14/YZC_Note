@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import './NoteEditor.css';
 
-function NoteEditor({ note, onSave, onDelete }) {
+function NoteEditor({ note, onSave, onDelete, onCreateSubNote }) {
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
   const [saveTimeout, setSaveTimeout] = useState(null);
@@ -47,9 +47,14 @@ function NoteEditor({ note, onSave, onDelete }) {
           onChange={handleTitleChange}
           placeholder="Note Title"
         />
-        <button className="btn-delete" onClick={onDelete}>
-          Delete
-        </button>
+        <div className="editor-buttons">
+          <button className="btn-add-subnote" onClick={() => onCreateSubNote(note.id)} title="Create Sub-Note">
+            + Sub-Note
+          </button>
+          <button className="btn-delete" onClick={onDelete}>
+            Delete
+          </button>
+        </div>
       </div>
       <textarea
         className="note-content"

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import './NotesList.css';
 
-function NotesList({ notes, allNotes, currentNoteId, onSelectNote }) {
+function NotesList({ notes, allNotes, currentNoteId, onSelectNote, onCreateSubNote }) {
   const [expandedNodes, setExpandedNodes] = useState(new Set());
 
   const toggleNode = (nodeId) => {
@@ -18,6 +18,7 @@ function NotesList({ notes, allNotes, currentNoteId, onSelectNote }) {
     const isExpanded = expandedNodes.has(node.id);
     const noteData = allNotes.find(n => n.id === node.id);
     const preview = noteData?.content?.substring(0, 30) || '';
+    
 
     return (
       <div key={node.id} className="note-tree-item">
@@ -39,6 +40,16 @@ function NotesList({ notes, allNotes, currentNoteId, onSelectNote }) {
             <div className="note-item-title">{node.title || 'Untitled'}</div>
             {preview && <div className="note-item-preview">{preview}</div>}
           </span>
+          <button
+            className="note-item-addsub"
+            onClick={(e) => {
+              e.stopPropagation();
+              onCreateSubNote(node.id);
+            }}
+            title="Create sub-note"
+          >
+            ➕
+          </button>
         </div>
 
         {node.children?.length > 0 && isExpanded && (

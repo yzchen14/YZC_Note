@@ -1,0 +1,5 @@
+{
+  "dependencies": {
+    "@zag-js/tooltip": "^1.33.1"
+  }
+}

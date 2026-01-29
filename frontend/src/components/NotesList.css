@@ -59,6 +59,29 @@
   min-width: 0;
 }
 
+.note-item-addsub {
+  padding: 4px 8px;
+  background: transparent;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: all 0.2s;
+  flex-shrink: 0;
+  display: none;
+}
+
+.note-item:hover .note-item-addsub {
+  display: block;
+  background: #f0f4ff;
+  border-color: #667eea;
+}
+
+.note-item-addsub:hover {
+  background: #667eea;
+  color: white;
+}
+
 .note-item-title {
   font-weight: 600;
   font-size: 14px;
