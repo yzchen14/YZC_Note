@@ -2,6 +2,7 @@
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
 from pathlib import Path
 
 from app.models import NoteApp
@@ -33,6 +34,14 @@ settings.set_note_app(note_app)
 # Include routers
 app.include_router(routes.router, prefix="/api/notes", tags=["notes"])
 app.include_router(settings.router, prefix="/api/settings", tags=["settings"])
+
+# Serve static files from the React build directory
+build_dir = Path(__file__).parent.parent / "frontend" / "build"
+if build_dir.exists():
+    app.mount("/", StaticFiles(directory=str(build_dir), html=True), name="static")
+else:
+    print(f"Warning: Build directory not found at {build_dir}")
+    print("Make sure to run 'npm run build' in the frontend directory")
 
 @app.on_event("startup")
 async def startup_event():
