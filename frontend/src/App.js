@@ -149,26 +149,34 @@ function App() {
     });
   };
 
-  const handleSaveNote = async (title, content) => {
-    if (!currentNoteId) return;
+  const handleSaveNote = async (noteId, title, content) => {
+    console.log(`[App] handleSaveNote called: noteId=${noteId}, currentNoteId=${currentNoteId}, title="${title}"`);
+    
+    if (!noteId) return;
 
     try {
-      const res = await axios.put(`${API_BASE_URL}/notes/${currentNoteId}`, {
+      const res = await axios.put(`${API_BASE_URL}/notes/${noteId}`, {
         title: title.trim() || 'Untitled',
         content
       });
       
+      console.log(`[App] Save successful for note ${noteId}`);
+      
       const updatedNote = res.data;
-      setNotes(notes.map(n => n.id === currentNoteId ? updatedNote : n));
-      setCurrentNote(updatedNote);
+      setNotes(notes.map(n => n.id === noteId ? updatedNote : n));
+      
+      // Only update current note if it's still the selected one
+      if (currentNoteId === noteId) {
+        setCurrentNote(updatedNote);
+      }
       
       // Update only the changed node in the tree
-      setNotesTree(updateTreeNode(notesTree, currentNoteId, { title: updatedNote.title }));
+      setNotesTree(updateTreeNode(notesTree, noteId, { title: updatedNote.title }));
       
       setStatus('Saved ✓');
       setTimeout(() => setStatus(''), 3000);
     } catch (error) {
-      console.error('Error saving note:', error);
+      console.error(`[App] Error saving note ${noteId}:`, error);
       setStatus('Error saving note');
     }
   };

@@ -63,18 +63,21 @@
   background: #5568d3;
 }
 
-.note-content {
+.vditor-container {
   flex: 1;
-  padding: 20px;
-  border: none;
-  outline: none;
-  font-size: 14px;
-  line-height: 1.6;
-  resize: none;
-  font-family: 'Monaco', 'Courier New', monospace;
-  background: white;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
 }
 
-.note-content:focus {
-  outline: none;
+.vditor-container .vditor {
+  height: 100%;
+  border: none;
+  border-radius: 0;
+}
+
+.vditor-container .vditor__ir,
+.vditor-container .vditor__wysiwyg,
+.vditor-container .vditor__preview {
+  padding: 20px;
 }

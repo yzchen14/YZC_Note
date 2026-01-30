@@ -77,6 +77,8 @@ async def create_note(note: NoteCreate):
 @router.put("/{note_id}", response_model=NoteResponse)
 async def update_note(note_id: int, note: NoteUpdate):
     """Update a note"""
+    print(f"[Backend] update_note called: note_id={note_id}, title='{note.title}'")
+    
     if not note_app:
         raise HTTPException(status_code=500, detail="Note app not initialized")
     
@@ -84,6 +86,7 @@ async def update_note(note_id: int, note: NoteUpdate):
     if not updated_note:
         raise HTTPException(status_code=404, detail="Note not found")
     
+    print(f"[Backend] Note {note_id} updated successfully")
     return updated_note
 
 @router.delete("/{note_id}")
